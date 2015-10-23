@@ -30,7 +30,7 @@ class Client(object):
             backoff = 1
 
             data = {
-                'data[timestamp]': point[keys['timestamp']]/1000,
+                'data[timestamp]': int(point[keys['timestamp']])/1000,
                 'data[value]': point[keys['value']]
             }
 
