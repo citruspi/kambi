@@ -10,7 +10,7 @@ class Client(object):
     def __init__(self, user, token):
         self.conn = requests.Session()
         self.conn.auth = (user, token)
-        self.con.headers = {
+        self.conn.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
