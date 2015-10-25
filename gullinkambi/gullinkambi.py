@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import multiprocessing
 import os.path
 import gullinkambi.sumologic
 import gullinkambi.statuspageio
@@ -34,3 +35,8 @@ class Gullinkambi(object):
                 'statuspageio_client': statuspageio_client,
                 'interval': metric['interval']
             }))
+
+    def start(self):
+        for metric in self.metrics:
+            process = multiprocessing.Process(target=metric.populate)
+            process.start()
