@@ -11,5 +11,8 @@ setup(
     platforms='any',
     install_requires=[
         'requests'
+    ],
+    scripts=[
+        'scripts/gullinkambid'
     ]
 )
