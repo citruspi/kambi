@@ -14,7 +14,7 @@ class Metric(object):
         if query['template']:
             path = os.path.join(
                 os.path.expanduser('~'),
-                '.gullinkambi/templates',
+                '.kambi/templates',
                 query['template'])
 
             with open(path, 'r') as f:

@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from kambi.kambi import Kambi
+
+kambi = Kambi()
+kambi.start()

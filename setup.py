@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(
-    name='gullinkambi',
+    name='kambi',
     version='0.0.1',
     author='Mihir Singh (@citruspi)',
     author_email='mihir.singh@hudl.com',
-    packages=['gullinkambi'],
+    packages=['kambi'],
     zip_safe=False,
     include_package_data=True,
     platforms='any',
@@ -13,6 +13,6 @@ setup(
         'requests'
     ],
     scripts=[
-        'scripts/gullinkambid'
+        'scripts/kambid'
     ]
 )

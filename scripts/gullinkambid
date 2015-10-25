@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from gullinkambi.gullinkambi import Gullinkambi
-
-gullinkambi = Gullinkambi()
-gullinkambi.start()
