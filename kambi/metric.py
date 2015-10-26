@@ -8,11 +8,12 @@ import kambi.stores.metric
 
 class Metric(object):
     def __init__(self, metric_id, query, sumologic_client, statuspageio_client,
-                 interval=30, span=900000):
+                 interval=30, span=900000, prune=True):
         self.metric_id = metric_id
         self.interval = interval
         self.conn = statuspageio_client
         self.span = span
+        self.prune = prune
 
         query['conn'] = sumologic_client
         query['span'] = span

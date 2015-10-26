@@ -1,11 +1,19 @@
 #!/usr/bin/env python
 # -*- coding utf-8 -*-
 
+import time
+import multiprocessing
+
 
 class MetricStore(dict):
 
     def __init__(self, metric, *args, **kwargs):
         self.metric = metric
+        self.prune_lock = False
+
+        if self.metric.prune:
+            process = multiprocessing.Process(target=self.prune)
+            process.start()
 
         super().__init__(*args, **kwargs)
 
@@ -29,3 +37,18 @@ class MetricStore(dict):
     def update(self, *args, **kwargs):
         for k, v in dict(*args, **kwargs).items():
             self[k] = v
+
+    def prune(self):
+        while True:
+            if not self.prune_lock:
+                print('Prune lock disabled')
+                for key in self:
+                    if int(key) < int(time.time() * 1000) - self.metric.span:
+                        print('Deleting {}'.format(key))
+                        del key
+                    else:
+                        print('Keeping {}'.format(key))
+                time.sleep(self.metric.span/1000)
+            else:
+                print('Prune lock enabled')
+                time.sleep(60)
