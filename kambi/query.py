@@ -9,7 +9,8 @@ class Query(object):
 
     endpoint = 'https://api.us2.sumologic.com/api/v1/logs/search'
 
-    def __init__(self, template, conn, timestamp='_timeslice', value='value'):
+    def __init__(self, template, conn, timestamp='_timeslice', value='value',
+                 span=900000):
         template_path = os.path.join(os.path.expanduser('~'),
                                      '.kambi/templates',
                                      template)
@@ -20,9 +21,10 @@ class Query(object):
         self.conn = conn
         self.timestamp = timestamp
         self.value = value
+        self.span = span
 
     def fetch(self, from_timestamp=None, to_timestamp=None):
-        from_timestamp = from_timestamp or int(time.time() * 1000)-900000
+        from_timestamp = from_timestamp or int(time.time() * 1000)-self.span
         to_timestamp = to_timestamp or int(time.time() * 1000)
 
         params = {
