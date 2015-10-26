@@ -3,6 +3,7 @@
 
 import time
 import kambi.query
+import kambi.stores.metric
 
 
 class Metric(object):
@@ -10,18 +11,18 @@ class Metric(object):
                  interval=30):
         self.metric_id = metric_id
         self.interval = interval
-        self.clients = {
-            'statuspageio': statuspageio_client
-        }
+        self.conn = statuspageio_client
 
         query['conn'] = sumologic_client
         self.query = kambi.query.Query(**query)
+
+        self.datastore = kambi.stores.metric.MetricStore(self)
 
     def populate(self):
         while True:
             started = int(time.time() * 1000)
 
-            print(self.query.fetch())
+            self.datastore.update(self.query.fetch())
 
             finished = int(time.time() * 1000)
 
@@ -29,3 +30,6 @@ class Metric(object):
 
             if time_left > 0:
                 time.sleep(time_left / 1000)
+
+    def update(self, timestamp, value):
+        self.conn.update_metric(self.metric_id, timestamp, value)
