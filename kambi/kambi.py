@@ -7,6 +7,8 @@ import os.path
 import kambi.sumologic
 import kambi.statuspageio
 import kambi.metric
+import time
+import random
 
 
 class Kambi(object):
@@ -41,5 +43,6 @@ class Kambi(object):
 
     def start(self):
         for metric in self.metrics:
+            time.sleep(random.randint(5, 15))
             process = multiprocessing.Process(target=metric.populate)
             process.start()
