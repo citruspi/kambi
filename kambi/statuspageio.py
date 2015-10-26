@@ -37,7 +37,10 @@ class Client(object):
                 self.backoff = 0.01
                 break
             except Exception as e:
-                if r.status_code == 420:
+                if r.status_code in [408, 420, 500, 501, 502, 503, 504]:
+                    message = 'Recieved {code} from StatusPage. Sleeping for {time}'
+                    print(message.format(code=r.status_code, time=self.backoff))
+
                     time.sleep(self.backoff)
                     self.backoff += self.backoff
                 else:
