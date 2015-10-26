@@ -7,6 +7,9 @@ import requests
 
 class Client(object):
 
+    backoff = 0.01
+    api_base = 'https://api.statuspage.io/v1/pages/{page}'
+
     def __init__(self, token, page_id):
         self.conn = requests.Session()
         self.conn.headers = {
@@ -15,34 +18,27 @@ class Client(object):
         }
 
         self.page_id = page_id
+        self.api_base = self.api_base.format(page=page_id)
 
-    def post_metric_data(self, metric_id, data, keys=None):
-        keys = keys or {
-            'timestamp': '_timeslice',
-            'value': 'value'
+    def update_metric(self, metric_id, timestamp, value):
+        endpoint = '{api_base}/metrics/{metric}/data.json'
+        endpoint = endpoint.format(api_base=self.api_base, metric=metric_id)
+
+        data = {
+            'data[timestamp]': timestamp,
+            'data[value]': value
         }
 
-        endpoint = 'https://api.statuspage.io/v1/pages/{page}/metrics/' \
-            '{metric}/data.json'
-        endpoint = endpoint.format(page=self.page_id, metric=metric_id)
+        while True:
+            r = self.conn.post(endpoint, data=data)
 
-        for point in data:
-            backoff = 1
-
-            data = {
-                'data[timestamp]': int(point[keys['timestamp']])/1000,
-                'data[value]': point[keys['value']]
-            }
-
-            while True:
-                r = self.conn.post(endpoint, data=data)
-
-                try:
-                    r.raise_for_status()
-                    break
-                except Exception as e:
-                    if r.status_code == 420:
-                        time.sleep(backoff)
-                        backoff += backoff
-                    else:
-                        raise e
+            try:
+                r.raise_for_status()
+                self.backoff = 0.01
+                break
+            except Exception as e:
+                if r.status_code == 420:
+                    time.sleep(self.backoff)
+                    self.backoff += self.backoff
+                else:
+                    raise e
