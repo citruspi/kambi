@@ -37,4 +37,8 @@ class Query(object):
 
         r.raise_for_status()
 
-        return r.json()
+        data = r.json()
+
+        data = {x[self.timestamp]: x[self.value] for x in data}
+
+        return data
