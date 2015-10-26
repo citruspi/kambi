@@ -33,7 +33,10 @@ class Kambi(object):
                 'query': metric['query'],
                 'sumologic_client': sumologic_client,
                 'statuspageio_client': statuspageio_client,
-                'interval': metric['interval']
+                'interval': metric['interval'],
+                'span': metric['span'],
+                'backfill': metric['backfill'],
+                'backfill_span': metric['backfill_span']
             }))
 
     def start(self):
