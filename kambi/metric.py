@@ -3,7 +3,7 @@
 
 import time
 import kambi.query
-import kambi.stores.metric
+import kambi.stores
 import multiprocessing
 
 
@@ -21,7 +21,7 @@ class Metric(object):
         query['span'] = span
         self.query = kambi.query.Query(**query)
 
-        self.datastore = kambi.stores.metric.MetricStore(self)
+        self.datastore = kambi.stores.MetricStore(self)
 
         if backfill:
             process = multiprocessing.Process(target=self.backfill,
